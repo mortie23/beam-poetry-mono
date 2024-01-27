@@ -1,0 +1,2 @@
+#! DO NOT EDIT
+# This is generated code from dataflow-generate-run.py and the template dtf-gcloud-template.sh

@@ -1,0 +1,48 @@
+<<header_text>>
+# This workflow executes <<job_name>> 
+main:
+  steps:
+    - <<job_name>>Initialise:
+        assign:
+          - job_name: ${"dtf-postgres-nfl-<<job_name>>"}
+          - template_path: gs://dataflow-templates-australia-southeast1/latest/flex/PostgreSQL_to_BigQuery
+          - e: null
+
+    - <<job_name>>Job:
+        try:
+          call: googleapis.dataflow.v1b3.projects.locations.flexTemplates.launch
+          args:
+            projectId: ${sys.get_env("project_id")}
+            location: ${sys.get_env("location")}
+            body:
+              launchParameter:
+                environment:
+                  serviceAccountEmail: ${sys.get_env("service_account") + "@" + sys.get_env("project_id") + ".iam.gserviceaccount.com"}
+                  stagingLocation: ${"gs://" + sys.get_env("storage_bucket") + "/dataflow/staging"}
+                  tempLocation: ${"gs://" + sys.get_env("storage_bucket") + "/dataflow/temp"}
+                  zone: ${sys.get_env("zone")}
+                containerSpecGcsPath: ${template_path}
+                jobName: ${job_name}
+                parameters:
+                  connectionURL: "<<connectionURL>>" 
+                  username: "<<username>>" 
+                  password: "<<password>>" 
+                  KMSEncryptionKey: ${"projects/" + sys.get_env("project_id") + "/locations/" + sys.get_env("location") + "/keyRings/keyring-fruit/cryptoKeys/key-fruit"} 
+                  query: "select * from <<postgres_schema_name>>.<<table_name>>" 
+                  isTruncate: "true" 
+                  outputTable: "<<output_table>>"
+                  bigQueryLoadingTemporaryDirectory: ${"gs://" + sys.get_env("storage_bucket") + "/dataflow/temp"}
+                  saveHeapDumpsToGcsPath: ${"gs://" + sys.get_env("storage_bucket") + "/dataflow/logs"}
+
+          result: launchResult
+
+        except:
+          as: e
+          steps:
+            - knownErrors:
+                switch:
+                  - condition: ${e.message == "The Dataflow Job failed."}
+                    return: ${e.message}
+
+    - theEnd:
+        return: "SUCCESS"

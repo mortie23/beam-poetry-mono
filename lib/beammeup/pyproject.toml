@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "beammeup"
+version = "0.1.0"
+description = "Helper library for working with Apache Beam and DataFlow"
+authors = ["Christopher Mortimer <christopher@mortimer.xyz>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+google-cloud-bigquery = "^3.16.0"
+google-cloud-secret-manager = "^2.17.0"
+google-cloud-kms = "^2.20.0"
+crcmod = "^1.7"
+pandas = "1.5.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

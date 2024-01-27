@@ -1,0 +1,3 @@
+postgres_schema_name,table_name
+mortimer_nfl,venue
+mortimer_nfl,team_lookup

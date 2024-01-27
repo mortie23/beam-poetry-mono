@@ -1,0 +1,38 @@
+# This workflow executes hellofruit
+main:
+  steps:
+    - helloFruitInitialise:
+        assign:
+          - job_name: ${"dtf-fruit-hellofruit"}
+          - template_path: ${"gs://" + sys.get_env("storage_bucket") + "/dataflow/flex-template/hellofruit.json"}
+          - e: null
+
+    - helloFruitJob:
+        try:
+          call: googleapis.dataflow.v1b3.projects.locations.flexTemplates.launch
+          args:
+            projectId: ${sys.get_env("project_id")}
+            location: ${sys.get_env("location")}
+            body:
+              launchParameter:
+                environment:
+                  serviceAccountEmail: ${sys.get_env("service_account") + "@" + sys.get_env("project_id") + ".iam.gserviceaccount.com"}
+                  stagingLocation: ${"gs://" + sys.get_env("storage_bucket") + "/dataflow/staging"}
+                  tempLocation: ${"gs://" + sys.get_env("storage_bucket") + "/dataflow/temp"}
+                  zone: ${sys.get_env("zone")}
+                containerSpecGcsPath: ${template_path}
+                jobName: ${job_name}
+                parameters:
+                  output_table: fruit.hellofruit
+          result: launchResult
+
+        except:
+          as: e
+          steps:
+            - knownErrors:
+                switch:
+                  - condition: ${e.message == "The Dataflow Job failed."}
+                    return: ${e.message}
+
+    - theEnd:
+        return: "SUCCESS"

@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "demo-docker"
+version = "0.1.0"
+description = ""
+authors = ["Christopher Mortimer <christopher@mortimer.xyz>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+apache-beam = {extras = ["gcp"], version = "^2.53.0"}
+beammeup = {path = "../../lib/beammeup", develop = true}
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

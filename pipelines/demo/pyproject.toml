@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "demo"
+version = "0.1.0"
+description = ""
+authors = ["Christopher Mortimer <christopher@mortimer.xyz>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+beammeup = { path = "../../lib/beammeup", develop = true }
+google-cloud-secret-manager = "^2.17.0"
+apache-beam = { extras = ["gcp"], version = "^2.53.0" }
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

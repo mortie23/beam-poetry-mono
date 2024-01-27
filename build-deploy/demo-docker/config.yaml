@@ -1,0 +1,7 @@
+project_id: "prj-xyz-<env>-fruit"
+artifact_registry: "australia-southeast1-docker.pkg.dev"
+artifact_repo_docker: "rpo-xyz-<env>-fruit-dkr"
+storage_bucket: "bkt-xyz-<env>-fruit"
+service_account: "gsvc-xyz-<env>-fruit"
+location: "australia-southeast1"
+zone: "australia-southeast1-a"
